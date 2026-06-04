@@ -5,8 +5,10 @@ from sqlalchemy.orm import Session
 
 from short_factory.api.schemas import (
     AnalyticsSummary,
+    CategoryPerformance,
     JobResponse,
     PublicationResponse,
+    RankedItem,
     ScriptResponse,
     TopicResponse,
     VideoResponse,
@@ -186,6 +188,27 @@ def analytics_summary():
     from short_factory.analytics.collector import get_performance_summary
 
     return get_performance_summary()
+
+
+@router.get("/analytics/top-topics", response_model=list[RankedItem])
+def analytics_top_topics(limit: int = Query(10, le=50)):
+    from short_factory.analytics.collector import get_top_topics
+
+    return get_top_topics(limit=limit)
+
+
+@router.get("/analytics/top-scripts", response_model=list[RankedItem])
+def analytics_top_scripts(limit: int = Query(10, le=50)):
+    from short_factory.analytics.collector import get_top_scripts
+
+    return get_top_scripts(limit=limit)
+
+
+@router.get("/analytics/category-performance", response_model=list[CategoryPerformance])
+def analytics_category_performance():
+    from short_factory.analytics.collector import get_category_performance
+
+    return get_category_performance()
 
 
 @router.post("/analytics/optimize", response_model=JobResponse)

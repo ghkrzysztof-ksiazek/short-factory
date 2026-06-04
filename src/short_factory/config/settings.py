@@ -31,6 +31,8 @@ class Settings(BaseSettings):
     youtube_client_secret: str = ""
     youtube_client_secrets_file: str = ""
     youtube_refresh_token: str = ""
+    youtube_channel_id: str = ""
+    youtube_dry_run: bool = True
 
     default_subtitle_style: dict = Field(
         default_factory=lambda: {

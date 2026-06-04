@@ -23,10 +23,16 @@ def get_emotion_weight(emotion: str | None) -> float:
     return get_weights("emotion").get(emotion, 1.0)
 
 
+def get_top_hook_patterns(limit: int = 3) -> list[tuple[str, float]]:
+    hooks = get_weights("hook_pattern")
+    return sorted(hooks.items(), key=lambda item: item[1], reverse=True)[:limit]
+
+
 def build_script_context() -> str:
     category_weights = get_weights("category")
     emotion_weights = get_weights("emotion")
-    if not category_weights and not emotion_weights:
+    hook_weights = get_weights("hook_pattern")
+    if not category_weights and not emotion_weights and not hook_weights:
         return ""
 
     lines = ["Optimization hints from analytics (prioritize high-performing patterns):"]
@@ -36,4 +42,9 @@ def build_script_context() -> str:
     if emotion_weights:
         top = sorted(emotion_weights.items(), key=lambda x: x[1], reverse=True)[:3]
         lines.append(f"- Favor emotions: {', '.join(f'{k} (weight {v:.2f})' for k, v in top)}")
+    if hook_weights:
+        top = sorted(hook_weights.items(), key=lambda x: x[1], reverse=True)[:3]
+        lines.append("- Winning hook patterns to emulate:")
+        for hook, weight in top:
+            lines.append(f"  • \"{hook}\" (weight {weight:.2f})")
     return "\n".join(lines)

@@ -79,3 +79,19 @@ class AnalyticsSummary(BaseModel):
     avg_retention: float
     publications: int
     top_categories: list[dict]
+
+
+class RankedItem(BaseModel):
+    id: int
+    label: str
+    category: str | None = None
+    views: int
+    avg_retention: float
+    avg_ctr: float
+    score: float
+
+
+class CategoryPerformance(BaseModel):
+    category: str
+    avg_score: float
+    samples: int

@@ -27,6 +27,10 @@ class YouTubePublisher(Publisher):
         from short_factory.config.settings import settings
         from short_factory.shared.storage import storage
 
+        if settings.youtube_dry_run:
+            logger.info("youtube_dry_run_enabled", video_id=video.id)
+            return f"dry_run_youtube_{video.id}"
+
         if not settings.youtube_refresh_token:
             logger.warning("youtube_not_configured", action="stub_publish")
             return f"stub_youtube_{video.id}"
