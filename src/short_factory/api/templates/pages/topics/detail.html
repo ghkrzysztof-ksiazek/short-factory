@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card">
+  <h2>{{ topic.topic }}</h2>
+  <p>
+    Virality: <strong>{{ '%.2f' | format(topic.virality_score) if topic.virality_score is not none else '—' }}</strong>
+    · Category: {{ topic.category or '—' }}
+    · Emotion: {{ topic.emotion or '—' }}
+  </p>
+  {% if topic.source_url %}
+  <p><a href="{{ topic.source_url }}" target="_blank" rel="noopener">View source →</a></p>
+  {% endif %}
+</div>
+
+<div class="card">
+  <h2>Linked Scripts</h2>
+  {% if scripts %}
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead>
+        <tr><th>ID</th><th>Hook</th><th>Status</th><th>Quality</th><th>Created</th></tr>
+      </thead>
+      <tbody>
+        {% for script in scripts %}
+        <tr>
+          <td><a href="/admin/scripts/{{ script.id }}">#{{ script.id }}</a></td>
+          <td class="truncate">{{ script.hook }}</td>
+          <td>{% set status = script.status.value %}{% include "components/status_badge.html" %}</td>
+          <td>{{ '%.0f%%' | format((script.quality_score or 0) * 100) }}</td>
+          <td>{{ script.created_at.strftime('%Y-%m-%d') if script.created_at else '—' }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  {% set title = "No scripts for this topic" %}
+  {% include "components/empty_state.html" %}
+  {% endif %}
+</div>
+{% endblock %}

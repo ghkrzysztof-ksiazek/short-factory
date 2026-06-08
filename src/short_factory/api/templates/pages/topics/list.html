@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card">
+  <form method="get" class="actions-row" style="margin-bottom:0">
+    <input type="text" name="category" placeholder="Category" value="{{ category_filter or '' }}">
+    <input type="number" name="min_virality" step="0.1" min="0" max="1" placeholder="Min virality" value="{{ min_virality_filter or '' }}">
+    <button type="submit">Filter</button>
+  </form>
+</div>
+
+<div class="card">
+  <h2>Topics ({{ total }})</h2>
+  {% if topics %}
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Topic</th>
+          <th>Virality</th>
+          <th>Category</th>
+          <th>Emotion</th>
+          <th>Source</th>
+          <th>Created</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for topic in topics %}
+        <tr>
+          <td><a href="/admin/topics/{{ topic.id }}">#{{ topic.id }}</a></td>
+          <td class="truncate">{{ topic.topic }}</td>
+          <td>{{ '%.2f' | format(topic.virality_score) if topic.virality_score is not none else '—' }}</td>
+          <td>{{ topic.category or '—' }}</td>
+          <td>{{ topic.emotion or '—' }}</td>
+          <td>{{ topic.source or '—' }}</td>
+          <td>{{ topic.created_at.strftime('%Y-%m-%d') if topic.created_at else '—' }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% set extra_params = '' %}
+  {% if category_filter %}{% set extra_params = extra_params ~ '&category=' ~ category_filter %}{% endif %}
+  {% if min_virality_filter %}{% set extra_params = extra_params ~ '&min_virality=' ~ min_virality_filter %}{% endif %}
+  {% include "components/pagination.html" %}
+  {% else %}
+  {% set title = "No topics yet" %}
+  {% set message = "Run research from the dashboard to discover topics." %}
+  {% include "components/empty_state.html" %}
+  {% endif %}
+</div>
+{% endblock %}

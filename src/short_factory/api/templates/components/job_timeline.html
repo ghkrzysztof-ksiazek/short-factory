@@ -1,0 +1,37 @@
+<ul class="timeline-list">
+  {% if entity_ids.script_ids %}
+  <li>
+    <strong>Scripts:</strong>
+    {% for sid in entity_ids.script_ids %}
+    <a href="/admin/scripts/{{ sid }}">#{{ sid }}</a>{% if not loop.last %}, {% endif %}
+    {% endfor %}
+  </li>
+  {% endif %}
+  {% if entity_ids.scene_plan_ids %}
+  <li>
+    <strong>Scene Plans:</strong>
+    {% for spid in entity_ids.scene_plan_ids %}
+    <a href="/admin/scene-plans/{{ spid }}">#{{ spid }}</a>{% if not loop.last %}, {% endif %}
+    {% endfor %}
+  </li>
+  {% endif %}
+  {% if entity_ids.video_ids %}
+  <li>
+    <strong>Videos:</strong>
+    {% for vid in entity_ids.video_ids %}
+    <a href="/admin/videos/{{ vid }}">#{{ vid }}</a>{% if not loop.last %}, {% endif %}
+    {% endfor %}
+  </li>
+  {% endif %}
+  {% if entity_ids.publication_ids %}
+  <li>
+    <strong>Publications:</strong>
+    {% for pid in entity_ids.publication_ids %}
+    <a href="/admin/publications/{{ pid }}">#{{ pid }}</a>{% if not loop.last %}, {% endif %}
+    {% endfor %}
+  </li>
+  {% endif %}
+  {% if not entity_ids.script_ids and not entity_ids.scene_plan_ids and not entity_ids.video_ids and not entity_ids.publication_ids %}
+  <li class="empty-state" style="padding:1rem 0">No linked entities in result yet.</li>
+  {% endif %}
+</ul>

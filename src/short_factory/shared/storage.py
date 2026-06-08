@@ -1,10 +1,29 @@
 import io
+import mimetypes
 from pathlib import Path
 
 import boto3
 from botocore.client import Config
 
 from short_factory.config.settings import settings
+
+_CONTENT_TYPES: dict[str, str] = {
+    ".mp4": "video/mp4",
+    ".mp3": "audio/mpeg",
+    ".wav": "audio/wav",
+    ".m4a": "audio/mp4",
+    ".srt": "text/plain; charset=utf-8",
+    ".ass": "text/plain; charset=utf-8",
+    ".vtt": "text/vtt",
+}
+
+
+def content_type_from_extension(s3_key: str) -> str:
+    ext = Path(s3_key).suffix.lower()
+    if ext in _CONTENT_TYPES:
+        return _CONTENT_TYPES[ext]
+    guessed, _ = mimetypes.guess_type(s3_key)
+    return guessed or "application/octet-stream"
 
 
 class StorageClient:
@@ -56,6 +75,10 @@ class StorageClient:
             Params={"Bucket": self.bucket, "Key": s3_key},
             ExpiresIn=expires_in,
         )
+
+    def stream_object(self, s3_key: str):
+        response = self.client.get_object(Bucket=self.bucket, Key=s3_key)
+        return response["Body"]
 
 
 storage = StorageClient()

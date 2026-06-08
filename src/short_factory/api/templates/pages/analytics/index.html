@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="kpi-grid">
+  <div class="kpi-card">
+    <div class="value">{{ summary.total_views }}</div>
+    <div class="label">Total Views</div>
+  </div>
+  <div class="kpi-card">
+    <div class="value">{{ '%.1f%%' | format(summary.avg_retention * 100) }}</div>
+    <div class="label">Avg Retention</div>
+  </div>
+  <div class="kpi-card">
+    <div class="value">{{ summary.publications }}</div>
+    <div class="label">Publications</div>
+  </div>
+</section>
+
+<div class="card">
+  <h2>Top Topics</h2>
+  {% if top_topics %}
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead><tr><th>ID</th><th>Label</th><th>Category</th><th>Views</th><th>Score</th></tr></thead>
+      <tbody>
+        {% for item in top_topics %}
+        <tr>
+          <td><a href="/admin/topics/{{ item.id }}">#{{ item.id }}</a></td>
+          <td>{{ item.label }}</td>
+          <td>{{ item.category or '—' }}</td>
+          <td>{{ item.views }}</td>
+          <td>{{ '%.2f' | format(item.score) }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  {% set title = "No topic analytics yet" %}
+  {% include "components/empty_state.html" %}
+  {% endif %}
+</div>
+
+<div class="card">
+  <h2>Top Scripts</h2>
+  {% if top_scripts %}
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead><tr><th>ID</th><th>Hook</th><th>Views</th><th>Retention</th><th>Score</th></tr></thead>
+      <tbody>
+        {% for item in top_scripts %}
+        <tr>
+          <td><a href="/admin/scripts/{{ item.id }}">#{{ item.id }}</a></td>
+          <td class="truncate">{{ item.label }}</td>
+          <td>{{ item.views }}</td>
+          <td>{{ '%.0f%%' | format(item.avg_retention * 100) }}</td>
+          <td>{{ '%.2f' | format(item.score) }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  {% set title = "No script analytics yet" %}
+  {% include "components/empty_state.html" %}
+  {% endif %}
+</div>
+
+<div class="card">
+  <h2>Category Performance</h2>
+  {% if category_perf %}
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead><tr><th>Category</th><th>Avg Score</th><th>Samples</th></tr></thead>
+      <tbody>
+        {% for item in category_perf %}
+        <tr>
+          <td>{{ item.category }}</td>
+          <td>{{ '%.2f' | format(item.avg_score) }}</td>
+          <td>{{ item.samples }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  {% set title = "No category data yet" %}
+  {% include "components/empty_state.html" %}
+  {% endif %}
+</div>
+
+<div class="actions-row">
+  <button hx-post="/admin/partials/run-optimization" hx-swap="none">Run Optimization</button>
+</div>
+{% endblock %}

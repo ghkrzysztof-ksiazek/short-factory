@@ -28,6 +28,7 @@ dependencies = [
     "python-multipart>=0.0.17",
     "structlog>=24.4.0",
     "numpy>=2.1.0",
+    "jinja2>=3.1.0",
 ]
 
 [project.optional-dependencies]
@@ -43,6 +44,10 @@ short-factory-api = "short_factory.api.main:run"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/short_factory"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"src/short_factory/api/templates" = "short_factory/api/templates"
+"src/short_factory/api/static" = "short_factory/api/static"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

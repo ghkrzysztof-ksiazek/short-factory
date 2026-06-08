@@ -1,0 +1,11 @@
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <a href="/admin">Dashboard</a>
+  {% for crumb in breadcrumbs %}
+  <span class="sep">/</span>
+  {% if crumb.href %}
+  <a href="{{ crumb.href }}">{{ crumb.label }}</a>
+  {% else %}
+  <span>{{ crumb.label }}</span>
+  {% endif %}
+  {% endfor %}
+</nav>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}{{ page_title }} — Short Factory Admin{% endblock %}</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+  <link rel="stylesheet" href="/admin/static/css/admin.css">
+  <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+</head>
+<body>
+  <div class="admin-layout">
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <a href="/admin">Short Factory</a>
+      </div>
+      <nav>
+        <ul>
+          {% for item in nav_items %}
+          <li>
+            <a href="{{ item.href }}" class="{% if request.url.path == item.href or (item.href != '/admin' and request.url.path.startswith(item.href)) %}active{% endif %}">
+              <span class="nav-icon">{{ item.icon }}</span> {{ item.label }}
+            </a>
+          </li>
+          {% endfor %}
+        </ul>
+      </nav>
+    </aside>
+    <main class="content">
+      {% if breadcrumbs %}
+      {% include "components/breadcrumbs.html" %}
+      {% endif %}
+      <header class="page-header">
+        <h1>{% block page_heading %}{{ page_title }}{% endblock %}</h1>
+      </header>
+      <div id="toast-container"></div>
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+  <script src="/admin/static/js/admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="kpi-grid">
+  <div class="kpi-card">
+    <div class="value">{{ counts.jobs_total }}</div>
+    <div class="label">Total Jobs</div>
+  </div>
+  <div class="kpi-card">
+    <div class="value">{{ counts.jobs_by_status.running | default(0) }}</div>
+    <div class="label">Running</div>
+  </div>
+  <div class="kpi-card">
+    <div class="value">{{ counts.topics_count }}</div>
+    <div class="label">Topics</div>
+  </div>
+  <div class="kpi-card">
+    <div class="value">{{ counts.scripts_by_status.approved | default(0) }}</div>
+    <div class="label">Approved Scripts</div>
+  </div>
+  <div class="kpi-card">
+    <div class="value">{{ counts.videos_count }}</div>
+    <div class="label">Videos</div>
+  </div>
+  <div class="kpi-card">
+    <div class="value">{{ counts.publications_published }}</div>
+    <div class="label">Published</div>
+  </div>
+</section>
+
+<div class="card">
+  <h2>Pipeline Actions</h2>
+  <div class="actions-row">
+    <button hx-post="/admin/partials/run-research" hx-swap="none">Run Research</button>
+    <button hx-post="/admin/partials/run-scripts" hx-swap="none">Generate Scripts</button>
+    <button hx-post="/admin/partials/run-pipeline" hx-swap="none">Run Full Pipeline</button>
+    <button hx-post="/admin/partials/run-optimization" hx-swap="none">Run Optimization</button>
+  </div>
+</div>
+
+<div class="card">
+  <h2>Recent Jobs</h2>
+  {% if recent_jobs %}
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Task</th>
+          <th>Status</th>
+          <th>Created</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for job in recent_jobs %}
+        <tr>
+          <td><a href="/admin/jobs/{{ job.id }}">#{{ job.id }}</a></td>
+          <td>{{ job.task_name }}</td>
+          <td>{% set status = job.status.value %}{% include "components/status_badge.html" %}</td>
+          <td>{{ job.created_at.strftime('%Y-%m-%d %H:%M') if job.created_at else '—' }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <p style="margin-top:0.75rem"><a href="/admin/jobs">View all jobs →</a></p>
+  {% else %}
+  {% set title = "No jobs yet" %}
+  {% set message = "Use the pipeline actions above to get started." %}
+  {% include "components/empty_state.html" %}
+  {% endif %}
+</div>
+{% endblock %}

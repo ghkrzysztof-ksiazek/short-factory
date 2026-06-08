@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card">
+  <h2>Scene Plans ({{ total }})</h2>
+  {% if plan_rows %}
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Script Hook</th>
+          <th>Scenes</th>
+          <th>Duration</th>
+          <th>Has Video</th>
+          <th>Created</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in plan_rows %}
+        {% set plan = row.plan %}
+        <tr>
+          <td><a href="/admin/scene-plans/{{ plan.id }}">#{{ plan.id }}</a></td>
+          <td class="truncate"><a href="/admin/scripts/{{ plan.script_id }}">{{ plan.script.hook if plan.script else 'Script #' ~ plan.script_id }}</a></td>
+          <td>{{ plan.scenes | length }}</td>
+          <td>{{ plan.total_duration_sec or '—' }}s</td>
+          <td>{{ 'Yes' if row.has_video else 'No' }}</td>
+          <td>{{ plan.created_at.strftime('%Y-%m-%d') if plan.created_at else '—' }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% include "components/pagination.html" %}
+  {% else %}
+  {% set title = "No scene plans yet" %}
+  {% set message = "Approve a script and generate media to create scene plans." %}
+  {% include "components/empty_state.html" %}
+  {% endif %}
+</div>
+{% endblock %}

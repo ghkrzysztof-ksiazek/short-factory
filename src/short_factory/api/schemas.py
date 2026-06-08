@@ -18,6 +18,11 @@ class JobResponse(BaseModel):
     model_config = {"from_attributes": True}
 
 
+class JobListResponse(BaseModel):
+    items: list[JobResponse]
+    total: int
+
+
 class TopicResponse(BaseModel):
     id: int
     topic: str
@@ -28,6 +33,15 @@ class TopicResponse(BaseModel):
     source: str | None
     source_url: str | None
     created_at: datetime
+
+    model_config = {"from_attributes": True}
+
+
+class TopicSummary(BaseModel):
+    id: int
+    topic: str
+    category: str | None
+    virality_score: float | None
 
     model_config = {"from_attributes": True}
 
@@ -48,6 +62,40 @@ class ScriptResponse(BaseModel):
     model_config = {"from_attributes": True}
 
 
+class ScriptDetailResponse(ScriptResponse):
+    metadata_: dict | None = None
+    topic: TopicSummary
+    scene_plan_ids: list[int]
+    video_ids: list[int]
+
+
+class ScriptReviewRequest(BaseModel):
+    reason: str | None = None
+
+
+class AssetResponse(BaseModel):
+    id: int
+    asset_type: str
+    scene_index: int | None
+    s3_key: str
+    duration_sec: float | None
+    verified: bool
+    preview_url: str
+
+
+class ScenePlanResponse(BaseModel):
+    id: int
+    script_id: int
+    scene_count: int
+    total_duration_sec: float | None
+    created_at: datetime
+
+
+class ScenePlanDetailResponse(ScenePlanResponse):
+    scenes: list[dict]
+    assets: list[AssetResponse]
+
+
 class VideoResponse(BaseModel):
     id: int
     script_id: int
@@ -65,13 +113,27 @@ class VideoResponse(BaseModel):
 class PublicationResponse(BaseModel):
     id: int
     video_id: int
+    channel_id: int | None
     platform: str
     external_id: str | None
     status: str
     scheduled_at: datetime | None
     published_at: datetime | None
+    created_at: datetime
 
     model_config = {"from_attributes": True}
+
+
+class VideoSummary(BaseModel):
+    id: int
+    script_id: int
+    duration_sec: float | None
+    qa_status: str
+
+
+class PublicationDetailResponse(PublicationResponse):
+    platform_url: str | None = None
+    video_summary: VideoSummary | None = None
 
 
 class AnalyticsSummary(BaseModel):

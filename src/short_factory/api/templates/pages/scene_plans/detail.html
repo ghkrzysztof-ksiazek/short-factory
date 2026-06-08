@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card">
+  <h2>Scene Plan #{{ plan.id }}</h2>
+  <p>
+    <a href="/admin/scripts/{{ plan.script_id }}">Script #{{ plan.script_id }}</a>
+    · {{ plan.scenes | length }} scenes · {{ plan.total_duration_sec or '—' }}s total
+  </p>
+  <div class="actions-row">
+    <button hx-post="/admin/partials/scene-plans/{{ plan.id }}/render" hx-swap="none">Render Video</button>
+  </div>
+</div>
+
+<div class="card">
+  <h2>Scenes</h2>
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead>
+        <tr><th>#</th><th>Text</th><th>Emotion</th><th>Duration</th><th>Visual Keywords</th></tr>
+      </thead>
+      <tbody>
+        {% for scene in plan.scenes %}
+        <tr>
+          <td>{{ scene.index if scene.index is defined else loop.index0 }}</td>
+          <td>{{ scene.text or '—' }}</td>
+          <td>{{ scene.emotion or '—' }}</td>
+          <td>{{ scene.duration_sec or '—' }}</td>
+          <td>{{ scene.visual_keywords | join(', ') if scene.visual_keywords else '—' }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <h2>Assets</h2>
+  {% if plan.assets %}
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead>
+        <tr><th>ID</th><th>Type</th><th>Scene</th><th>Preview</th><th>Download</th></tr>
+      </thead>
+      <tbody>
+        {% for asset in plan.assets %}
+        <tr>
+          <td>#{{ asset.id }}</td>
+          <td>{{ asset.asset_type.value }}</td>
+          <td>{{ asset.scene_index if asset.scene_index is not none else 'master' }}</td>
+          <td class="asset-preview">
+            {% if asset.asset_type.value == 'voice' %}
+            <audio controls src="/media/asset/{{ asset.id }}" preload="none"></audio>
+            {% elif asset.asset_type.value == 'visual' %}
+            <video controls src="/media/asset/{{ asset.id }}" preload="metadata" style="max-height:120px"></video>
+            {% elif asset.asset_type.value == 'subtitle' %}
+            <span style="font-size:0.8rem;color:#64748b">{{ asset.s3_key }}</span>
+            {% else %}
+            —
+            {% endif %}
+          </td>
+          <td><a href="/media/asset/{{ asset.id }}/download">Download</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  {% set title = "No assets yet" %}
+  {% include "components/empty_state.html" %}
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card">
+  <h2>Publications ({{ total }})</h2>
+  {% if pub_rows %}
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Video</th>
+          <th>Platform</th>
+          <th>Status</th>
+          <th>Scheduled</th>
+          <th>Published</th>
+          <th>Link</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in pub_rows %}
+        {% set pub = row.publication %}
+        <tr>
+          <td><a href="/admin/publications/{{ pub.id }}">#{{ pub.id }}</a></td>
+          <td class="truncate"><a href="/admin/videos/{{ pub.video_id }}">#{{ pub.video_id }}</a></td>
+          <td>{{ pub.platform.value }}</td>
+          <td>{% set status = pub.status.value %}{% include "components/status_badge.html" %}</td>
+          <td>{{ pub.scheduled_at.strftime('%Y-%m-%d %H:%M') if pub.scheduled_at else '—' }}</td>
+          <td>{{ pub.published_at.strftime('%Y-%m-%d %H:%M') if pub.published_at else '—' }}</td>
+          <td>
+            {% if row.platform_url %}
+            <a href="{{ row.platform_url }}" target="_blank" rel="noopener">View →</a>
+            {% else %}—{% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% include "components/pagination.html" %}
+  {% else %}
+  {% set title = "No publications yet" %}
+  {% include "components/empty_state.html" %}
+  {% endif %}
+</div>
+{% endblock %}

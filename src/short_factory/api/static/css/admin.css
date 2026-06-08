@@ -1,0 +1,361 @@
+:root {
+  --status-pending: #6b7280;
+  --status-running: #2563eb;
+  --status-completed: #16a34a;
+  --status-failed: #dc2626;
+  --status-dead-letter: #ea580c;
+  --sidebar-width: 220px;
+}
+
+body {
+  margin: 0;
+  background: #f8fafc;
+}
+
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: var(--sidebar-width);
+  background: #1a1a2e;
+  color: #e2e8f0;
+  padding: 1rem 0;
+  flex-shrink: 0;
+}
+
+.sidebar-brand {
+  padding: 0 1.25rem 1rem;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.sidebar-brand a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.sidebar nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.sidebar nav a {
+  display: block;
+  padding: 0.6rem 1.25rem;
+  color: #cbd5e1;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.sidebar nav a:hover,
+.sidebar nav a.active {
+  background: #16213e;
+  color: #fff;
+}
+
+.nav-icon {
+  margin-right: 0.35rem;
+}
+
+.content {
+  flex: 1;
+  padding: 1.5rem 2rem;
+  max-width: 1200px;
+}
+
+.page-header h1 {
+  margin: 0 0 1.25rem;
+  font-size: 1.75rem;
+  color: #1a1a2e;
+}
+
+.breadcrumbs {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin-bottom: 0.75rem;
+}
+
+.breadcrumbs a {
+  color: #2563eb;
+  text-decoration: none;
+}
+
+.breadcrumbs .sep {
+  margin: 0 0.35rem;
+}
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.kpi-card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.kpi-card .value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1a1a2e;
+}
+
+.kpi-card .label {
+  font-size: 0.8rem;
+  color: #64748b;
+  margin-top: 0.25rem;
+}
+
+.card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.card h2 {
+  margin: 0 0 1rem;
+  font-size: 1.1rem;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+table.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+table.data-table th,
+table.data-table td {
+  padding: 0.6rem 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+table.data-table th {
+  font-weight: 600;
+  color: #475569;
+  background: #f8fafc;
+}
+
+table.data-table tr:hover td {
+  background: #f1f5f9;
+}
+
+table.data-table a {
+  color: #2563eb;
+  text-decoration: none;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.status-pending { background: #f1f5f9; color: var(--status-pending); }
+.status-running { background: #dbeafe; color: var(--status-running); }
+.status-completed { background: #dcfce7; color: var(--status-completed); }
+.status-failed { background: #fee2e2; color: var(--status-failed); }
+.status-dead_letter { background: #ffedd5; color: var(--status-dead-letter); }
+.status-approved { background: #dcfce7; color: var(--status-completed); }
+.status-rejected { background: #fee2e2; color: var(--status-failed); }
+.status-pending_review { background: #fef9c3; color: #a16207; }
+.status-passed { background: #dcfce7; color: var(--status-completed); }
+.status-draft { background: #f1f5f9; color: var(--status-pending); }
+.status-published { background: #dcfce7; color: var(--status-completed); }
+.status-scheduled { background: #dbeafe; color: var(--status-running); }
+
+.actions-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.actions-row button,
+.actions-row a.btn {
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+  border: none;
+  border-radius: 6px;
+  background: #1a1a2e;
+  color: #fff;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.actions-row button:hover,
+.actions-row a.btn:hover {
+  background: #16213e;
+}
+
+.actions-row button.secondary {
+  background: #e2e8f0;
+  color: #1e293b;
+}
+
+.filter-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.filter-tabs a {
+  padding: 0.35rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  text-decoration: none;
+  color: #475569;
+  background: #f1f5f9;
+}
+
+.filter-tabs a.active {
+  background: #1a1a2e;
+  color: #fff;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 2.5rem 1rem;
+  color: #64748b;
+}
+
+.empty-state p {
+  margin: 0.5rem 0 0;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  font-size: 0.85rem;
+}
+
+.pagination a {
+  padding: 0.35rem 0.65rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  text-decoration: none;
+  color: #2563eb;
+  background: #fff;
+}
+
+.pagination .current {
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.quality-bar {
+  height: 6px;
+  background: #e2e8f0;
+  border-radius: 3px;
+  overflow: hidden;
+  min-width: 60px;
+}
+
+.quality-bar-fill {
+  height: 100%;
+  background: #16a34a;
+}
+
+.truncate {
+  max-width: 280px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.json-block {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 0.75rem;
+  font-family: ui-monospace, monospace;
+  font-size: 0.8rem;
+  overflow-x: auto;
+  max-height: 300px;
+}
+
+.video-player-wrap {
+  margin: 1rem 0;
+}
+
+.video-player-wrap video {
+  max-width: 100%;
+  border-radius: 8px;
+  background: #000;
+}
+
+.asset-preview audio,
+.asset-preview video {
+  max-width: 100%;
+  margin: 0.25rem 0;
+}
+
+.timeline-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.timeline-list li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.timeline-list li:last-child {
+  border-bottom: none;
+}
+
+.issue-list {
+  list-style: disc;
+  padding-left: 1.25rem;
+  color: #b45309;
+}
+
+.script-section {
+  margin-bottom: 1rem;
+}
+
+.script-section h3 {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin: 0 0 0.35rem;
+  text-transform: uppercase;
+}
+
+.script-section p {
+  margin: 0;
+  line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+  .admin-layout {
+    flex-direction: column;
+  }
+  .sidebar {
+    width: 100%;
+  }
+  .content {
+    padding: 1rem;
+  }
+}

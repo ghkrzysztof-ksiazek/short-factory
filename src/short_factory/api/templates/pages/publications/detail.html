@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card">
+  <h2>Publication #{{ publication.id }}</h2>
+  <p>
+    <a href="/admin/videos/{{ publication.video_id }}">Video #{{ publication.video_id }}</a>
+    · Platform: {{ publication.platform.value }}
+    · {% set status = publication.status.value %}{% include "components/status_badge.html" %}
+  </p>
+  {% if platform_url %}
+  <p><a href="{{ platform_url }}" target="_blank" rel="noopener">View on YouTube →</a></p>
+  {% elif publication.external_id %}
+  <p style="color:#64748b">External ID: {{ publication.external_id }} (stub/dry-run — no public link)</p>
+  {% endif %}
+</div>
+
+<div class="card">
+  <h2>Details</h2>
+  <table class="data-table">
+    <tbody>
+      <tr><th>Channel ID</th><td>{{ publication.channel_id or '—' }}</td></tr>
+      <tr><th>External ID</th><td>{{ publication.external_id or '—' }}</td></tr>
+      <tr><th>Scheduled</th><td>{{ publication.scheduled_at.strftime('%Y-%m-%d %H:%M') if publication.scheduled_at else '—' }}</td></tr>
+      <tr><th>Published</th><td>{{ publication.published_at.strftime('%Y-%m-%d %H:%M') if publication.published_at else '—' }}</td></tr>
+      <tr><th>Created</th><td>{{ publication.created_at.strftime('%Y-%m-%d %H:%M') if publication.created_at else '—' }}</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="card">
+  <h2>Actions</h2>
+  <button hx-post="/admin/partials/publications/{{ publication.id }}/analytics" hx-swap="none">Collect Analytics</button>
+</div>
+{% endblock %}

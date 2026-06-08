@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card">
+  <h2>Video #{{ video.id }}</h2>
+  <p>
+    <a href="/admin/scripts/{{ video.script_id }}">Script #{{ video.script_id }}</a>
+    {% if scene_plan %}· <a href="/admin/scene-plans/{{ scene_plan.id }}">Scene Plan #{{ scene_plan.id }}</a>{% endif %}
+    · {{ video.duration_sec or '—' }}s
+  </p>
+  <p>
+    QA: {% set status = video.qa_status.value %}{% include "components/status_badge.html" %}
+    · Publish: {% set status = video.publish_status.value %}{% include "components/status_badge.html" %}
+  </p>
+</div>
+
+{% if video.s3_key %}
+<div class="card">
+  <h2>Preview</h2>
+  {% set video_id = video.id %}
+  {% include "components/video_player.html" %}
+  <div class="actions-row">
+    <a class="btn" href="/media/video/{{ video.id }}/download">Download MP4</a>
+  </div>
+</div>
+{% endif %}
+
+{% if video.qa_details and video.qa_details.issues %}
+<div class="card">
+  <h2>QA Issues</h2>
+  <ul class="issue-list">
+    {% for issue in video.qa_details.issues %}
+    <li>{{ issue }}</li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}
+
+<div class="card">
+  <h2>Publish</h2>
+  <form hx-post="/admin/partials/videos/{{ video.id }}/publish" hx-swap="none" class="actions-row">
+    <select name="platform">
+      <option value="youtube">YouTube</option>
+    </select>
+    <button type="submit">Publish Now</button>
+  </form>
+  <p style="font-size:0.85rem;color:#64748b;margin-top:0.5rem">Publishing creates a background job — you'll be redirected to track progress.</p>
+</div>
+
+{% if video.publications %}
+<div class="card">
+  <h2>Publications</h2>
+  <ul class="timeline-list">
+    {% for pub in video.publications %}
+    <li><a href="/admin/publications/{{ pub.id }}">Publication #{{ pub.id }}</a> — {{ pub.platform.value }} — {{ pub.status.value }}</li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}
+{% endblock %}

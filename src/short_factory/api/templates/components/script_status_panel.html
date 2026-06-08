@@ -1,0 +1,5 @@
+{% set status = script.status.value %}
+{% include "components/status_badge.html" %}
+{% if script.metadata_ and script.metadata_.review_source %}
+<span style="margin-left:0.5rem;font-size:0.8rem;color:#64748b">({{ script.metadata_.review_source }} review)</span>
+{% endif %}

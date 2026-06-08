@@ -31,6 +31,28 @@ API: http://localhost:8000
 Admin UI: http://localhost:8000/admin  
 MinIO Console: http://localhost:9001 (minioadmin/minioadmin)
 
+### Admin UI
+
+The operator dashboard at `/admin` is a server-rendered HTMX + Jinja2 UI (no separate frontend build).
+
+| Page | Route | Description |
+|------|-------|-------------|
+| Dashboard | `/admin` | KPIs, recent jobs, pipeline quick actions |
+| Jobs | `/admin/jobs` | Async job list with filters; detail pages auto-poll every 2s while running |
+| Topics | `/admin/topics` | Research output with virality scores |
+| Scripts | `/admin/scripts` | Review queue with manual approve/reject override |
+| Scene Plans | `/admin/scene-plans` | Scene breakdown with audio/video asset previews |
+| Videos | `/admin/videos` | HTML5 player and MP4 download |
+| Publications | `/admin/publications` | Publish status with YouTube links when live |
+| Analytics | `/admin/analytics` | Performance summary and rankings |
+
+**Media preview/download** (browser-safe, no MinIO presigned URLs):
+
+- `GET /media/asset/{id}` — stream asset for `<audio>` / `<video>` tags
+- `GET /media/asset/{id}/download` — download asset
+- `GET /media/video/{id}` — stream final MP4 for player
+- `GET /media/video/{id}/download` — download final MP4
+
 ### Local Development (without Docker for API)
 
 ```bash

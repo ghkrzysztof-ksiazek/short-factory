@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card">
+  <form method="get" class="actions-row" style="margin-bottom:0">
+    <select name="qa_status">
+      <option value="">All QA statuses</option>
+      <option value="pending" {% if qa_status_filter == 'pending' %}selected{% endif %}>Pending</option>
+      <option value="passed" {% if qa_status_filter == 'passed' %}selected{% endif %}>Passed</option>
+      <option value="failed" {% if qa_status_filter == 'failed' %}selected{% endif %}>Failed</option>
+    </select>
+    <select name="publish_status">
+      <option value="">All publish statuses</option>
+      <option value="draft" {% if publish_status_filter == 'draft' %}selected{% endif %}>Draft</option>
+      <option value="scheduled" {% if publish_status_filter == 'scheduled' %}selected{% endif %}>Scheduled</option>
+      <option value="published" {% if publish_status_filter == 'published' %}selected{% endif %}>Published</option>
+    </select>
+    <button type="submit">Filter</button>
+  </form>
+</div>
+
+<div class="card">
+  <h2>Videos ({{ total }})</h2>
+  {% if videos %}
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Script Hook</th>
+          <th>Duration</th>
+          <th>QA</th>
+          <th>Publish</th>
+          <th>Created</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for video in videos %}
+        <tr>
+          <td><a href="/admin/videos/{{ video.id }}">#{{ video.id }}</a></td>
+          <td class="truncate"><a href="/admin/scripts/{{ video.script_id }}">{{ video.script.hook if video.script else 'Script #' ~ video.script_id }}</a></td>
+          <td>{{ video.duration_sec or '—' }}s</td>
+          <td>{% set status = video.qa_status.value %}{% include "components/status_badge.html" %}</td>
+          <td>{% set status = video.publish_status.value %}{% include "components/status_badge.html" %}</td>
+          <td>{{ video.created_at.strftime('%Y-%m-%d') if video.created_at else '—' }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% set extra_params = '' %}
+  {% if qa_status_filter %}{% set extra_params = extra_params ~ '&qa_status=' ~ qa_status_filter %}{% endif %}
+  {% if publish_status_filter %}{% set extra_params = extra_params ~ '&publish_status=' ~ publish_status_filter %}{% endif %}
+  {% include "components/pagination.html" %}
+  {% else %}
+  {% set title = "No videos yet" %}
+  {% set message = "Render a scene plan to produce videos." %}
+  {% include "components/empty_state.html" %}
+  {% endif %}
+</div>
+{% endblock %}

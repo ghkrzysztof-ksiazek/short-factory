@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card">
+  <h2>{{ job.task_name }}</h2>
+  <p style="color:#64748b;margin:0">Job #{{ job.id }} · Updated {{ job.updated_at.strftime('%Y-%m-%d %H:%M') if job.updated_at else '—' }}</p>
+</div>
+
+{% include "components/job_status_panel.html" %}
+{% endblock %}

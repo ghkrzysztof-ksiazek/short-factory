@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card">
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:1rem">
+    <div>
+      <h2 style="margin:0">Script #{{ script.id }}</h2>
+      <p style="margin:0.5rem 0 0"><a href="/admin/topics/{{ script.topic_id }}">Topic #{{ script.topic_id }}</a></p>
+    </div>
+    <div id="script-status">
+      {% include "components/script_status_panel.html" %}
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="script-section"><h3>Hook</h3><p>{{ script.hook }}</p></div>
+  <div class="script-section"><h3>Body</h3><p>{{ script.body }}</p></div>
+  <div class="script-section"><h3>Ending</h3><p>{{ script.ending }}</p></div>
+  <div class="script-section"><h3>CTA</h3><p>{{ script.cta }}</p></div>
+</div>
+
+<div class="card">
+  <h2>Validation</h2>
+  <p>Quality score: <strong>{{ '%.0f%%' | format((script.quality_score or 0) * 100) }}</strong>
+    · Est. duration: {{ script.estimated_duration_sec or '—' }}s</p>
+  {% if script.metadata_ and script.metadata_.validation_issues %}
+  <ul class="issue-list">
+    {% for issue in script.metadata_.validation_issues %}
+    <li>{{ issue }}</li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p style="color:#64748b">No validation issues recorded.</p>
+  {% endif %}
+</div>
+
+<div class="card">
+  <h2>Actions</h2>
+  <div class="actions-row">
+    <button hx-post="/admin/partials/scripts/{{ script.id }}/approve" hx-target="#script-status" hx-swap="innerHTML">Approve</button>
+    <button class="secondary" hx-post="/admin/partials/scripts/{{ script.id }}/reject" hx-target="#script-status" hx-swap="innerHTML" hx-confirm="Reject this script?">Reject</button>
+    {% if script.status.value == 'approved' %}
+    <button hx-post="/admin/partials/scripts/{{ script.id }}/media" hx-swap="none">Generate Media</button>
+    {% endif %}
+  </div>
+</div>
+
+{% if script.scene_plans %}
+<div class="card">
+  <h2>Scene Plans</h2>
+  <ul class="timeline-list">
+    {% for plan in script.scene_plans %}
+    <li><a href="/admin/scene-plans/{{ plan.id }}">Scene Plan #{{ plan.id }}</a> ({{ plan.scenes | length }} scenes)</li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}
+
+{% if script.videos %}
+<div class="card">
+  <h2>Videos</h2>
+  <ul class="timeline-list">
+    {% for video in script.videos %}
+    <li><a href="/admin/videos/{{ video.id }}">Video #{{ video.id }}</a> — {% set status = video.qa_status.value %}{% include "components/status_badge.html" %}</li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}
+{% endblock %}

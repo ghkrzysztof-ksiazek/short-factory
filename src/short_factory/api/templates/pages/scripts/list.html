@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="filter-tabs">
+  {% for value, label in status_tabs %}
+  <a href="/admin/scripts{% if value %}?status={{ value }}{% endif %}" class="{% if status_filter == value or (not status_filter and not value) %}active{% endif %}">{{ label }}</a>
+  {% endfor %}
+</div>
+
+<div class="card">
+  <h2>Scripts ({{ total }})</h2>
+  {% if scripts %}
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Hook</th>
+          <th>Topic</th>
+          <th>Quality</th>
+          <th>Status</th>
+          <th>Variant</th>
+          <th>Created</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for script in scripts %}
+        <tr>
+          <td><a href="/admin/scripts/{{ script.id }}">#{{ script.id }}</a></td>
+          <td class="truncate">{{ script.hook }}</td>
+          <td><a href="/admin/topics/{{ script.topic_id }}">#{{ script.topic_id }}</a></td>
+          <td>
+            <div class="quality-bar"><div class="quality-bar-fill" style="width:{{ ((script.quality_score or 0) * 100) | int }}%"></div></div>
+          </td>
+          <td>{% set status = script.status.value %}{% include "components/status_badge.html" %}</td>
+          <td>{{ script.hook_variant }}</td>
+          <td>{{ script.created_at.strftime('%Y-%m-%d') if script.created_at else '—' }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% set extra_params = '' %}
+  {% if status_filter %}{% set extra_params = '&status=' ~ status_filter %}{% endif %}
+  {% include "components/pagination.html" %}
+  {% else %}
+  {% set title = "No scripts found" %}
+  {% include "components/empty_state.html" %}
+  {% endif %}
+</div>
+{% endblock %}

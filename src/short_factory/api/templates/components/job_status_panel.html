@@ -1,0 +1,39 @@
+<div id="job-status-panel"
+     {% if poll %}
+     hx-get="/admin/partials/jobs/{{ job.id }}/status"
+     hx-trigger="every 2s"
+     hx-swap="outerHTML"
+     {% endif %}>
+  <div class="card">
+    <h2>Status</h2>
+    {% set status = job.status.value %}
+    {% include "components/status_badge.html" %}
+    {% if job.celery_task_id %}
+    <p style="margin-top:0.75rem;font-size:0.85rem;color:#64748b">Celery: <code data-copy="{{ job.celery_task_id }}">{{ job.celery_task_id }}</code></p>
+    {% endif %}
+    {% if job.error %}
+    <div style="margin-top:1rem;padding:0.75rem;background:#fee2e2;border-radius:6px;color:#991b1b">
+      <strong>Error:</strong> {{ job.error }}
+      {% if job.retries %}<br><small>Retries: {{ job.retries }}</small>{% endif %}
+    </div>
+    {% endif %}
+  </div>
+
+  {% if job.result %}
+  <div class="card">
+    <h2>Result</h2>
+    {% include "components/job_timeline.html" %}
+    <details style="margin-top:1rem">
+      <summary>Raw JSON</summary>
+      <pre class="json-block">{{ job.result | tojson(indent=2) }}</pre>
+    </details>
+  </div>
+  {% endif %}
+
+  {% if job.payload %}
+  <div class="card">
+    <h2>Payload</h2>
+    <pre class="json-block">{{ job.payload | tojson(indent=2) }}</pre>
+  </div>
+  {% endif %}
+</div>

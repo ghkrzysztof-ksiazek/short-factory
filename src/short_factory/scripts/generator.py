@@ -73,7 +73,7 @@ def generate_scripts_for_topic(topic_id: int, hook_variants: bool = True) -> lis
                 quality_score=quality_score,
                 status=ScriptStatus.APPROVED if passed else ScriptStatus.REJECTED,
                 hook_variant=i + 1,
-                metadata_={"validation_issues": issues},
+                metadata_={"validation_issues": issues, "review_source": "auto"},
             )
             db.add(script)
             db.flush()

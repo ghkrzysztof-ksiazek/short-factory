@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card">
+  <form method="get" class="actions-row" style="margin-bottom:0">
+    <select name="status">
+      <option value="">All statuses</option>
+      <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>Pending</option>
+      <option value="running" {% if status_filter == 'running' %}selected{% endif %}>Running</option>
+      <option value="completed" {% if status_filter == 'completed' %}selected{% endif %}>Completed</option>
+      <option value="failed" {% if status_filter == 'failed' %}selected{% endif %}>Failed</option>
+      <option value="dead_letter" {% if status_filter == 'dead_letter' %}selected{% endif %}>Dead Letter</option>
+    </select>
+    <input type="text" name="task_name" placeholder="Task name filter" value="{{ task_name_filter or '' }}">
+    <button type="submit">Filter</button>
+  </form>
+</div>
+
+<div class="card">
+  <h2>Jobs ({{ total }})</h2>
+  {% if jobs %}
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Task</th>
+          <th>Status</th>
+          <th>Payload</th>
+          <th>Created</th>
+          <th>Error</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for job in jobs %}
+        <tr>
+          <td><a href="/admin/jobs/{{ job.id }}">#{{ job.id }}</a></td>
+          <td>{{ job.task_name }}</td>
+          <td>{% set status = job.status.value %}{% include "components/status_badge.html" %}</td>
+          <td class="truncate">{{ job.payload | tojson if job.payload else '—' }}</td>
+          <td>{{ job.created_at.strftime('%Y-%m-%d %H:%M') if job.created_at else '—' }}</td>
+          <td class="truncate">{{ job.error or '—' }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% set extra_params = '' %}
+  {% if status_filter %}{% set extra_params = extra_params ~ '&status=' ~ status_filter %}{% endif %}
+  {% if task_name_filter %}{% set extra_params = extra_params ~ '&task_name=' ~ task_name_filter %}{% endif %}
+  {% include "components/pagination.html" %}
+  {% else %}
+  {% set title = "No jobs found" %}
+  {% set message = "Try adjusting your filters or run a pipeline action from the dashboard." %}
+  {% include "components/empty_state.html" %}
+  {% endif %}
+</div>
+{% endblock %}
